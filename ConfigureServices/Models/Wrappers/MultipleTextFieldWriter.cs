@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ConfigureServices.Models.Wrappers
 {
-    public class MultipleTextFieldWriter : BaseFieldWriter
+    public class MultipleTextFieldWriter : IFieldWriter
     {
         MultipleTextField _source;
         public MultipleTextFieldWriter(MultipleTextField source)

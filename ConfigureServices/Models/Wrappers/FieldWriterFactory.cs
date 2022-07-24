@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace ConfigureServices.Models.Wrappers
 {
-    public static class FieldWriterFactory
+    public class FieldWriterFactory
     {
+        /// <summary>
+        /// Фабричный метод для создания типа IFieldWriter
+        /// </summary>       
         public static IFieldWriter Create(BaseField field)
         {
 

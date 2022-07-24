@@ -15,23 +15,23 @@ namespace ConfigureServices.Models.Fields
             return type.IsAssignableFrom(typeof(BaseField));
         }
 
+        /// <summary>
+        /// Десериализация типа
+        /// </summary>
+
         public override BaseField Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             if (JsonDocument.TryParseValue(ref reader, out var doc))
             {
+                // тип задается явно в поле Type
                 if (doc.RootElement.TryGetProperty("Type", out var type))
                 {
                     var typeValue = type.GetString();
                     var rootElement = doc.RootElement.GetRawText();
 
-                    return typeValue switch
-                    {
-                        "NumberField" => JsonSerializer.Deserialize(rootElement, typeof(NumberField), options) as NumberField,
-                        "TextField" => JsonSerializer.Deserialize<TextField>(rootElement, options),
-                        "MultipleTextField" => JsonSerializer.Deserialize<MultipleTextField>(rootElement, options),
+                    var fieldFactory = new BaseFieldFactory(rootElement, options);
 
-                        _ => throw new JsonException($"{typeValue} has not been mapped to a custom type yet!")
-                    };
+                    return fieldFactory.Create(typeValue);
                 }
 
                 throw new JsonException("Failed to extract type property, it might be missing?");
@@ -41,7 +41,9 @@ namespace ConfigureServices.Models.Fields
         }
 
 
-
+        /// <summary>
+        /// Сериализация типа
+        /// </summary>        
         public override void Write(Utf8JsonWriter writer, BaseField value, JsonSerializerOptions options)
         {
             var concreteWriter = FieldWriterFactory.Create(value);
