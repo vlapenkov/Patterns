@@ -18,7 +18,6 @@ namespace ConfigureServices.Models.Fields
         /// <summary>
         /// Десериализация типа
         /// </summary>
-
         public override BaseField Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             if (JsonDocument.TryParseValue(ref reader, out var doc))

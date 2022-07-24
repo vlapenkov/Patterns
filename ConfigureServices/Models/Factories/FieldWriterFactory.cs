@@ -22,9 +22,9 @@ namespace ConfigureServices.Models.Wrappers
 
             };
 
-            var res = dict[field.GetType()];
+            var func = dict[field.GetType()];
 
-            return res();
+            return func();
 
         }
     }
