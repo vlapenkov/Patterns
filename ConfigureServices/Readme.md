@@ -10,3 +10,4 @@
  { "attributeId":11, "Field":{"Type":"NumberField", "Value":123}}]
 } 
 
+Данное решение сериализует все наследованные от BaseField типы
