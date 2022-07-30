@@ -20,6 +20,8 @@ namespace ConfigureServices.Models.Fields
         /// </summary>
         public override BaseField Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
+
+
             if (JsonDocument.TryParseValue(ref reader, out var doc))
             {
                 // тип задается явно в поле Type
@@ -28,9 +30,9 @@ namespace ConfigureServices.Models.Fields
                     var typeValue = type.GetString();
                     var rootElement = doc.RootElement.GetRawText();
 
-                    var fieldFactory = new BaseFieldFactory(rootElement, options);
-
-                    return fieldFactory.Create(typeValue);
+                    //  var fieldFactory = new BaseFieldFactory(rootElement, options);
+                    string fullTypeName = "ConfigureServices.Models.Fields." + typeValue;
+                    return (BaseField)JsonSerializer.Deserialize(rootElement, Type.GetType(fullTypeName), options);
                 }
 
                 throw new JsonException("Failed to extract type property, it might be missing?");
@@ -48,6 +50,7 @@ namespace ConfigureServices.Models.Fields
             var concreteWriter = FieldWriterFactory.Create(value);
 
             concreteWriter.Write(writer, options);
+
         }
     }
 }

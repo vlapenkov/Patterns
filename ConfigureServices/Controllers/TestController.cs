@@ -1,4 +1,5 @@
 ﻿using ConfigureServices.Models;
+using ConfigureServices.Models.ComplexModels;
 using ConfigureServices.Models.Fields;
 using ConfigureServices.Services;
 using Microsoft.AspNetCore.Http;
@@ -16,17 +17,7 @@ namespace ConfigureServices
     public class TestController : ControllerBase
     {
         IBaseTypeFactory _baseTypeFactory;
-        //  Func<int, BaseTypeService> _func;
-        //public TestController(Func<int, BaseTypeService> func)
-        //{
-        //    _func = func;
-        //}
 
-        //[HttpGet]
-        //public BaseTypeService Get(int i)
-        //{
-        //    return _func(i);
-        //}
 
         public TestController(IBaseTypeFactory baseTypeFactory)
         {
@@ -43,6 +34,12 @@ namespace ConfigureServices
 
         [HttpPost]
         public IActionResult Post([FromBody] IEnumerable<BaseField> model)
+        {
+            return Ok(model);
+        }
+
+        [HttpPost("complexmodel")]
+        public IActionResult Post([FromBody] /* IEnumerable<SimpleModel> */ ComplexModel model)
         {
             return Ok(model);
         }

@@ -19,14 +19,9 @@ namespace ConfigureServices.Models.Wrappers
         public BaseField Create(string typeValue)
         {
 
-            return typeValue switch
-            {
-                "NumberField" => (NumberField)JsonSerializer.Deserialize(_rootElement, typeof(NumberField), _options) as NumberField,
-                "TextField" => JsonSerializer.Deserialize<TextField>(_rootElement, _options),
-                "MultipleTextField" => JsonSerializer.Deserialize<MultipleTextField>(_rootElement, _options),
+            string fullTypeName = "ConfigureServices.Models.Fields." + typeValue;
+            return (BaseField)JsonSerializer.Deserialize(_rootElement, Type.GetType(fullTypeName), _options);
 
-                _ => throw new JsonException($"{typeValue} has not been mapped to a custom type yet!")
-            };
         }
     }
 }
