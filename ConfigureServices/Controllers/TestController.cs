@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ConfigureServices
@@ -17,6 +18,7 @@ namespace ConfigureServices
     public class TestController : ControllerBase
     {
         IBaseTypeFactory _baseTypeFactory;
+
 
 
         public TestController(IBaseTypeFactory baseTypeFactory)
@@ -38,10 +40,6 @@ namespace ConfigureServices
             return Ok(model);
         }
 
-        [HttpPost("complexmodel")]
-        public IActionResult Post([FromBody] /* IEnumerable<SimpleModel> */ ComplexModel model)
-        {
-            return Ok(model);
-        }
+
     }
 }

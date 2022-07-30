@@ -3,6 +3,8 @@ using ConfigureServices.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -15,14 +17,27 @@ namespace ConfigureServices
     //delegate x  = Func<int, BaseType>;
     public delegate BaseTypeService GetBaseType(int x);
 
+
     public class Startup
     {
+
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        public IConfiguration Configuration { get; }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
 
 
+            services.AddDbContext<AppDbContext>(
+            //options => options.UseSqlServer(Configuration.GetConnectionString("SqlConnection"))
+            options => options.UseNpgsql(Configuration.GetConnectionString("SqlConnection"))
+           );
 
             services.AddControllers();
             services.AddHostedService<HostedService>();
@@ -106,6 +121,23 @@ namespace ConfigureServices
                      await context.Response.WriteAsync("Hello World!");
                  }); */
             });
+
+            try
+            {
+                using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+                {
+                    var context = serviceScope.ServiceProvider.GetService<AppDbContext>();
+                    context.Database.Migrate();
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"MyWebApi migration not working");
+                Console.Write(e.Message);
+                Console.Write(e.InnerException);
+                Console.Write(e.StackTrace);
+            }
 
         }
     }
