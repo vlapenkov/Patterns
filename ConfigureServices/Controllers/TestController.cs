@@ -1,14 +1,7 @@
-﻿using ConfigureServices.Models;
-using ConfigureServices.Models.ComplexModels;
-using ConfigureServices.Models.Fields;
+﻿using ConfigureServices.Models.Fields;
 using ConfigureServices.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace ConfigureServices
 {
@@ -27,11 +20,11 @@ namespace ConfigureServices
         }
 
         [HttpGet]
-        public BaseTypeService Get(int i)
+        public string Get(int i)
         {
             var result = _baseTypeFactory.Create(i);
 
-            return result;
+            return result.ToString();
         }
 
         [HttpPost]

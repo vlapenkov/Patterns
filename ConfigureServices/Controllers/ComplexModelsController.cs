@@ -1,10 +1,5 @@
 ﻿using ConfigureServices.Models.ComplexModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ConfigureServices.Controllers
 {
@@ -25,14 +20,14 @@ namespace ConfigureServices.Controllers
             return Ok(model.Id);
         }
 
-        [HttpGet("{id}")]
-        public IActionResult Get(long id)
-        {
-            var complexModelFound = _dbContext.ComplexModels
-                .Include(cm => cm.AttributeValues)
-                .First(x => x.Id == id);
+        //[HttpGet("{id}")]
+        //public IActionResult Get(long id)
+        //{
+        //    var complexModelFound = _dbContext.ComplexModels
+        //        .Include(cm => cm.AttributeValues)
+        //        .First(x => x.Id == id);
 
-            return Ok(complexModelFound);
-        }
+        //    return Ok(complexModelFound);
+        //}
     }
 }

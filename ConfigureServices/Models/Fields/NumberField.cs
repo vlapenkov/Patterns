@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ConfigureServices.Models.Fields
+﻿namespace ConfigureServices.Models.Fields
 {
     public class NumberField : BaseField
     {

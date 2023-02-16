@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 
-namespace ConfigureServices
+namespace ConfigureServices.OtherServices
 {
 
     internal class SingletonService2 : IDisposable

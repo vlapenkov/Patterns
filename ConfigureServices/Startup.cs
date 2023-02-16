@@ -1,21 +1,20 @@
 using ConfigureServices.Models;
+using ConfigureServices.OtherServices;
 using ConfigureServices.Services;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ConfigureServices
 {
-    //delegate x  = Func<int, BaseType>;
-    public delegate BaseTypeService GetBaseType(int x);
+
+    public delegate ITypeService GetBaseType(int x);
 
 
     public class Startup
@@ -53,7 +52,7 @@ namespace ConfigureServices
                 return instance;
             }
 
-            var dict2 = new Dictionary<int, BaseTypeService>
+            var dict2 = new Dictionary<int, ITypeService>
             {
                 [1] = GetInstance<TypeAService>(),
                 [2] = GetInstance<TypeBService>()
@@ -91,6 +90,9 @@ namespace ConfigureServices
             //});
 
 
+            services.AddHealthChecks();
+            services.AddHealthChecksUI()
+                 .AddInMemoryStorage();
 
             services.AddApiVersioning();
             services.AddSwaggerGen();
@@ -116,11 +118,20 @@ namespace ConfigureServices
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+
+                endpoints.MapHealthChecks("/hc", new HealthCheckOptions
+                {
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+
                 /* endpoints.MapGet("/", async context =>
                  {
                      await context.Response.WriteAsync("Hello World!");
                  }); */
             });
+
+            app.UseHealthChecksUI(config => config.UIPath = "/hc-ui");
 
             try
             {

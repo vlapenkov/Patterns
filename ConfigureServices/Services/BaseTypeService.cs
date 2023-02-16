@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ConfigureServices.Models
+﻿namespace ConfigureServices.Models
 {
-    public abstract class BaseTypeService
+    public interface ITypeService
     {
+        public string DoSomething();
+
 
     }
 }

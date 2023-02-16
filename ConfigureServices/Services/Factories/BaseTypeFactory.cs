@@ -1,21 +1,18 @@
 ﻿using ConfigureServices.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ConfigureServices.Services
 {
     public class BaseTypeFactory : IBaseTypeFactory
     {
-        private readonly Func<int, BaseTypeService> _initFunc;
+        private readonly Func<int, ITypeService> _initFunc;
 
-        public BaseTypeFactory(Func<int, BaseTypeService> initFunc)
+        public BaseTypeFactory(Func<int, ITypeService> initFunc)
         {
             _initFunc = initFunc;
         }
 
-        public BaseTypeService Create(int parameter)
+        public ITypeService Create(int parameter)
         {
             return _initFunc(parameter);
         }

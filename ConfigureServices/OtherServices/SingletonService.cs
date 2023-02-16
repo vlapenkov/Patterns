@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 
-namespace ConfigureServices
+namespace ConfigureServices.OtherServices
 {
 
     internal class SingletonService : IDisposable
@@ -27,7 +27,8 @@ namespace ConfigureServices
             var data = JsonSerializer.Deserialize<IEnumerable<Entity>>(result);
 
             Console.WriteLine("call ctor SingletonService");
-            dictionary = data.ToDictionary(x => x.id, x => x.title);//new Dictionary<int, string> { [1] = "asd", [2] = "fgh" };
+
+            dictionary = data.ToDictionary(x => x.id, x => x.title);
         }
 
 

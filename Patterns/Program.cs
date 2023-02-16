@@ -1,8 +1,5 @@
-﻿using Factory;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace Patterns
@@ -22,7 +19,7 @@ namespace Patterns
             //var list = newList(100);
 
             // 2 кейс: создание из фабрики в которой Activator.CreateInstance
-            var fileName = @"c:\temp\test1.txt";
+            var fileName = @"c:\3_Source\test1.txt";
 
             Stream fileStream = File.OpenRead(fileName);
 

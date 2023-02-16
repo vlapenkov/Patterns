@@ -4,6 +4,6 @@ namespace ConfigureServices.Services
 {
     public interface IBaseTypeFactory
     {
-        BaseTypeService Create(int parameter);
+        ITypeService Create(int parameter);
     }
 }

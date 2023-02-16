@@ -8,6 +8,18 @@ namespace Sorting
 
         public static void Main()
         {
+
+            var sequence1 = GuidGenerator.GenerateSequence();
+
+            var previtem = default(Guid);
+            foreach (var item in sequence1)
+            {
+                if (item < previtem)
+
+            }
+
+            return;
+
             AClass a;
 
             a = new AClass { X = 10 };
