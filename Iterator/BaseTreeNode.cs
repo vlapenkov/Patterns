@@ -13,16 +13,23 @@ namespace Iterator
 
         #region PrivateMembers
 
-        private IList<BaseTreeNode<T>> _children = new List<BaseTreeNode<T>>();
+        private Lazy<List<BaseTreeNode<T>>> _children = new Lazy<List<BaseTreeNode<T>>>(
+            delegate ()
+            {
+                Console.WriteLine("_children added");
+                return new List<BaseTreeNode<T>>();
+            }
+            //() => new List<BaseTreeNode<T>>()
+            );
 
         /// <summary> Данные узла </summary>
-        public virtual T Data { get; private set; }
+        public virtual T Data { get; protected set; }
 
         /// <summary> Дочерние элементы </summary>
-        public virtual IEnumerable<BaseTreeNode<T>> Children => _children;
+        public virtual IEnumerable<BaseTreeNode<T>> Children => _children.Value;
 
         /// <summary> Родительский элемент </summary>        
-        public BaseTreeNode<T> Parent { get; private set; }
+        public BaseTreeNode<T>? Parent { get; protected set; }
 
         #endregion
 
@@ -34,7 +41,12 @@ namespace Iterator
 
             child.Parent = this;
 
-            _children.Add(child);
+            _children.Value.Add(child);
+        }
+
+        public override string ToString()
+        {
+            return Data + " root";
         }
     }
 }
