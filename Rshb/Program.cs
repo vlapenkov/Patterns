@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Rshb
 {
@@ -74,6 +75,26 @@ namespace Rshb
         }
         static void Main(string[] args)
         {
+
+            string[] strings = { "aa", "bb", "cc", "dd", "dd" };
+
+            var dict = strings.GroupBy(x => x).ToDictionary(x => x, x => x.ToArray());
+            Console.WriteLine(dict);
+
+
+            Employee[] employees = {
+                new Employee { Age = 10, Name = "Vas", Position = "top" },
+                new Employee { Age = 20, Name = "Test", Position = "top" },
+                new Employee { Age = 30, Name = "Ton", Position = "top" } ,
+                new Employee { Age = 40, Name = "Yes", Position = "top" },
+                new Employee { Age = 50, Name = "Ton", Position = "top" } ,
+            };
+
+            var dictEmployees = employees.GroupBy(x => x.Name).ToDictionary(x => x, x => x.Sum(empl => empl.Age));
+
+            Console.WriteLine(dictEmployees);
+
+
             //var c = new Foo();
             //var handler = new FooHandler();
             //c.Event += handler.Handle;

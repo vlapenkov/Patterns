@@ -2,8 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ConfigureServices.Services
 {
@@ -15,10 +13,10 @@ namespace ConfigureServices.Services
             services.AddTransient<TypeAService>();
             services.AddTransient<TypeBService>();
 
-            services.AddSingleton<Func<int, BaseTypeService>>(serviceProvider => (int parameter) =>
+            services.AddSingleton<Func<int, ITypeService>>(serviceProvider => (int parameter) =>
                 {
                     ;
-                    var dict = new Dictionary<int, Func<BaseTypeService>>
+                    var dict = new Dictionary<int, Func<ITypeService>>
                     {
                         [1] = () => serviceProvider.GetService<TypeAService>(),
                         [2] = () => serviceProvider.GetService<TypeBService>()
@@ -29,6 +27,8 @@ namespace ConfigureServices.Services
                 });
 
             services.AddSingleton<IBaseTypeFactory, BaseTypeFactory>();
+
+
         }
 
     }
