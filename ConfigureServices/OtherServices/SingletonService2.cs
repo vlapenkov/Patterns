@@ -7,7 +7,7 @@ using System.Text.Json;
 namespace ConfigureServices.OtherServices
 {
 
-    internal class SingletonService2 : IDisposable
+    public class SingletonService2 : IDisposable
     {
         public class Entity
         {

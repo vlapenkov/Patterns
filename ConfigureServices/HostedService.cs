@@ -1,6 +1,8 @@
-﻿using ConfigureServices.OtherServices;
+﻿using ConfigureServices.Models.OtherDto;
+using ConfigureServices.ServicesAsHandler;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,9 +12,13 @@ namespace ConfigureServices
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public HostedService(IServiceScopeFactory serviceScopeFactory)
+        private readonly IMessageProcessor _processor;        
+
+        public HostedService(IServiceScopeFactory serviceScopeFactory, IMessageProcessor processor) //, IServiceCollection services
+                                                                                                    //)
         {
             _serviceScopeFactory = serviceScopeFactory;
+            _processor = processor;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -21,19 +27,19 @@ namespace ConfigureServices
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                using (var scope = _serviceScopeFactory.CreateScope())
-                {
-                    //   var service2 = scope.ServiceProvider.GetService<SingletonService2>();
+                //using IServiceScope scope = _serviceScopeFactory.CreateScope();
+                // MessageProcessor processor = scope.ServiceProvider.GetService<MessageProcessor>();
 
-                    var service2 = SingletonService.Instance;
+               await _processor.Handle(new SecondMessage { Id = 3, Name = "Petya" });
 
-                    var data = service2.Data;
+                //await _processor.Handle(new FirstMessage { Id = 1});
 
-                    //    Console.WriteLine(data[1]);
+                await _processor.Handle(new ThirdMessage { });
 
-                    await Task.Delay(1000);
 
-                }
+                Console.WriteLine();
+
+                await Task.Delay(1_000);
 
             }
         }

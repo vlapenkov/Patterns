@@ -14,7 +14,7 @@ namespace Sorting
             var previtem = default(Guid);
             foreach (var item in sequence1)
             {
-                if (item < previtem)
+                //if (item < previtem) { };
 
             }
 

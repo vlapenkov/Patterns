@@ -1,6 +1,7 @@
 ﻿using ConfigureServices.Models.Fields;
 using ConfigureServices.Services;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 
 namespace ConfigureServices
@@ -10,7 +11,7 @@ namespace ConfigureServices
     [ApiController]
     public class TestController : ControllerBase
     {
-        IBaseTypeFactory _baseTypeFactory;
+        private IBaseTypeFactory _baseTypeFactory;
 
 
 
@@ -22,6 +23,7 @@ namespace ConfigureServices
         [HttpGet]
         public string Get(int i)
         {
+            throw new NotImplementedException("adf");
             var result = _baseTypeFactory.Create(i);
 
             return result.ToString();

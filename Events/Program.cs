@@ -1,4 +1,4 @@
-﻿namespace DotNetDesignPatternDemos.Behavioral.Observer
+﻿namespace Events
 
 {
     public class FallsIllEventArgs : EventArgs
@@ -27,15 +27,32 @@
 
     }
 
+    internal class A
+    {
+
+        public virtual void DoOne() { Console.WriteLine("1"); }
+    }
+
+    internal class B : A
+    {
+        public override void DoOne()
+        { Console.WriteLine("2"); }
+    }
+
     public class Demo
 
     {
-
-        static async Task Main()
+        private static void Main()
 
         {
 
-            var person = new Person();
+            A a = new B() as int;
+
+            a.DoOne();
+
+            _ = Console.ReadKey();
+
+            Person person = new();
 
             person.FallsIll += CallDoctor;
 
