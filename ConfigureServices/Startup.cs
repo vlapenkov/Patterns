@@ -1,3 +1,5 @@
+using ConfigureServices.Mediator;
+using ConfigureServices.Mediator.Resolvers;
 using ConfigureServices.Models;
 using ConfigureServices.Models.OtherDto;
 using ConfigureServices.OtherServices;
@@ -95,8 +97,13 @@ namespace ConfigureServices
                     opt.AddEventHandler<ThirdMessage, ThirdServiceHandler>();
                 });
 
-         
+            // или так, если нужно одно событие обрабатывать 2-мя хэндлерами 
 
+            services.AddEventProcessor<SecondMessage>(conf =>
+            {
+                conf.AddResolver<Resolver1>();
+                conf.AddResolver<Resolver2>();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

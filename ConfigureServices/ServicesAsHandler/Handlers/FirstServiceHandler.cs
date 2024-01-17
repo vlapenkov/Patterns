@@ -1,6 +1,7 @@
 ﻿using ConfigureServices.Models.OtherDto;
 using ConfigureServices.OtherServices;
 using System;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 
 namespace ConfigureServices.ServicesAsHandler.Handlers
@@ -16,7 +17,7 @@ namespace ConfigureServices.ServicesAsHandler.Handlers
 
         public Task Handle(FirstMessage message)
         {
-            Console.WriteLine(message);
+            Console.WriteLine("Message handled" + message);
             return Task.CompletedTask;
         }
     }

@@ -17,7 +17,7 @@ namespace ConfigureServices.ServicesAsHandler.Handlers
 
         public Task Handle(SecondMessage message)
         {
-            _logger.LogInformation("{@message}", message);
+            _logger.LogInformation("Message handled {@message}", message);
             return Task.CompletedTask;
         }
     }

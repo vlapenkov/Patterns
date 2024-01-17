@@ -1,4 +1,5 @@
-﻿using ConfigureServices.Models.CarDto;
+﻿using System;
+using ConfigureServices.Models.CarDto;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -23,7 +24,7 @@ namespace ConfigureServices.Controllers
                 Tires = new List<Tire> { new Tire { Id = 1, Description = "Conti" }, new Tire { Id = 2, Description = "Yoko" } }
             };
 
-            // throw new NotImplementedException();
+            throw new NotImplementedException();
             CarDto carDto = CarMapper.MapCarToCarDto(car);
             return carDto;
         }

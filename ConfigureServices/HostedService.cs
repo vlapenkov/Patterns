@@ -9,15 +9,14 @@ using System.Threading.Tasks;
 namespace ConfigureServices
 {
     internal class HostedService : BackgroundService
-    {
-        private readonly IServiceScopeFactory _serviceScopeFactory;
+    {        
 
         private readonly IMessageProcessor _processor;        
 
-        public HostedService(IServiceScopeFactory serviceScopeFactory, IMessageProcessor processor) //, IServiceCollection services
-                                                                                                    //)
+        public HostedService(IServiceScopeFactory serviceScopeFactory, IMessageProcessor processor) 
+                                                                                                    
         {
-            _serviceScopeFactory = serviceScopeFactory;
+            
             _processor = processor;
         }
 
@@ -27,14 +26,13 @@ namespace ConfigureServices
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                //using IServiceScope scope = _serviceScopeFactory.CreateScope();
-                // MessageProcessor processor = scope.ServiceProvider.GetService<MessageProcessor>();
+               
 
                await _processor.Handle(new SecondMessage { Id = 3, Name = "Petya" });
 
-                //await _processor.Handle(new FirstMessage { Id = 1});
+               
 
-                await _processor.Handle(new ThirdMessage { });
+                await _processor.Handle(new ThirdMessage {Id =1 });
 
 
                 Console.WriteLine();

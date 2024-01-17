@@ -1,5 +1,6 @@
 ﻿using ConfigureServices.Models.OtherDto;
 using ConfigureServices.OtherServices;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
@@ -7,16 +8,16 @@ namespace ConfigureServices.ServicesAsHandler.Handlers
 {
     public class ThirdServiceHandler : IMessageHandler<ThirdMessage>
     {
-        private readonly SingletonService2 _singletonService;
+        private readonly ILogger<ThirdServiceHandler> _logger;
 
-        public ThirdServiceHandler(SingletonService2 singletonService)
+        public ThirdServiceHandler(ILogger<ThirdServiceHandler> logger)
         {
-            _singletonService = singletonService;
+            _logger = logger;
         }
 
         public Task Handle(ThirdMessage message)
         {
-            Console.WriteLine(message);
+            _logger.LogInformation("Message handled {@message}", message);
             return Task.CompletedTask;
         }
     }

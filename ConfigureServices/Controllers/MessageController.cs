@@ -1,6 +1,8 @@
-﻿using ConfigureServices.Models.OtherDto;
+﻿using ConfigureServices.Mediator;
+using ConfigureServices.Models.OtherDto;
 using ConfigureServices.ServicesAsHandler;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace ConfigureServices.Controllers
 {
@@ -9,17 +11,18 @@ namespace ConfigureServices.Controllers
     [ApiController]
     public class MessageController : ControllerBase
     {
-        MessageProcessor _processor;
+        
+        private readonly IEventProcessor<SecondMessage> _eventProcessor;
 
-        public MessageController(MessageProcessor processor)
-        {
-            _processor = processor;
+        public MessageController(IEventProcessor<SecondMessage> eventProcessor)
+        {            
+            _eventProcessor = eventProcessor;
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            _processor.Handle(new FirstMessage { Id = 10 });
+           await _eventProcessor.Process(new SecondMessage { Id = 10, Name = "Test" });
 
             return Ok();
         }
