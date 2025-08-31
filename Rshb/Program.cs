@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
+using BenchmarkDotNet.Running;
 
 namespace Rshb
 {
@@ -81,13 +84,34 @@ namespace Rshb
         }
         static void Main(string[] args)
         {
+            
+            BenchmarkRunner.Run<StringTest>();
+            
+            return;
+            string path = "c:\\temp\\1.txt";
 
-            //string[] strings = { "aa", "bb", "cc", "dd", "dd" };
+            string str = "";
+            var str1 = File.ReadAllText(path);
+            Console.WriteLine(str1);
+           string[] strings = { "aa", "bb", "cc", "dd", "dd" };
+           
+            var dict = strings.GroupBy(x => x).ToDictionary(x => x, x => x.ToArray());
+            Console.WriteLine(dict);
+            
+            // чтение из файла
+            // using (FileStream fstream = File.OpenRead(path))
+            // {
+            //     // выделяем массив для считывания данных из файла
+            //     byte[] buffer = new byte[fstream.Length];
+            //     // считываем данные
+            //      fstream.Read(buffer, 0, buffer.Length);
+            //     // декодируем байты в строку
+            //     string textFromFile = Encoding.Default.GetString(buffer);
+            //     Console.WriteLine($"Текст из файла: {textFromFile}");
+            // }
+            Console.WriteLine(str);
 
-            //var dict = strings.GroupBy(x => x).ToDictionary(x => x, x => x.ToArray());
-            //Console.WriteLine(dict);
-
-
+return;
             //Employee[] employees = {
             //    new Employee { Age = 10, Name = "Vas", Position = "top" },
             //    new Employee { Age = 20, Name = "Test", Position = "top" },

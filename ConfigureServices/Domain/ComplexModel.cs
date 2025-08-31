@@ -4,16 +4,26 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ConfigureServices.Models.ComplexModels
 {
-    public class ComplexModel
+
+    public class BaseEntity
     {
         public long Id { get; set; }
+
+
+        [NotMapped]
+        int State { get; set; }
+    }
+
+    public class ComplexModel : BaseEntity
+    {
+
         public string Name { get; set; }
         public IEnumerable<SimpleModel> AttributeValues { get; set; } = new List<SimpleModel>();
     }
 
-    public class SimpleModel
+    public class SimpleModel : BaseEntity
     {
-        public long Id { get; set; }
+
 
         [Column(TypeName = "jsonb")]
         public BaseField Field { get; set; }

@@ -1,6 +1,8 @@
 using ConfigureServices.Mediator;
+using ConfigureServices.Mediator.ComplexModelNs;
 using ConfigureServices.Mediator.Resolvers;
 using ConfigureServices.Models;
+using ConfigureServices.Models.ComplexModels;
 using ConfigureServices.Models.OtherDto;
 using ConfigureServices.OtherServices;
 using ConfigureServices.Services;
@@ -45,7 +47,7 @@ namespace ConfigureServices
            );
 
             services.AddControllers();
-            services.AddHostedService<HostedService>();
+            //services.AddHostedService<HostedService>();
 
             services.AddSingleton<SingletonService2>();
 
@@ -104,6 +106,19 @@ namespace ConfigureServices
                 conf.AddResolver<Resolver1>();
                 conf.AddResolver<Resolver2>();
             });
+
+
+            services.AddEventProcessor<ComplexModel>(conf =>
+            {
+                conf.AddResolver<ComplexModelAdd>();
+                conf.AddResolver<ComplexModelUpdate>();
+            });
+            //services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            //{
+            //    builder.WithOrigins("http://localhost:3000")
+            //           .AllowAnyMethod()
+            //           .AllowAnyHeader();
+            //}));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -114,6 +129,10 @@ namespace ConfigureServices
             //    app.UseDeveloperExceptionPage();
             //}
 
+            app.UseCors(builder => builder.WithOrigins("http://localhost:3000")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod());
+
             app.UseRouting();
 
 
@@ -122,6 +141,7 @@ namespace ConfigureServices
 
             app.UseEndpoints(endpoints => { _ = endpoints.MapControllers(); _ = endpoints.MapHealthChecks("/hc", new HealthCheckOptions { Predicate = _ => true, ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse }); });
 
+          
             //  app.UseHealthChecksUI(config => config.UIPath = "/hc-ui");
 
             //try

@@ -31,6 +31,8 @@ namespace ConfigureServices.Mediator
     public interface IEventResolver<TEntity> where TEntity : class
     {
 
+
+
         public Task Resolve(TEntity entry);
     }
 }
