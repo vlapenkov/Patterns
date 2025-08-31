@@ -1,4 +1,5 @@
 ﻿using ConfigureServices.Mediator;
+using ConfigureServices.Mediator.ComplexModelNs;
 using ConfigureServices.Models.ComplexModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,13 +39,23 @@ namespace ConfigureServices
         }
 
 
-       
+        /// <summary>
+        /// Класс для временного сохранения State, т.к. после SaveChanges State Меняется на Unchanged
+        /// </summary>
+        class SuapEntityWithState : BaseEntity {
+
+            public BaseEntity Entity { get; set; }
+
+            public int State { get; set; }
+        }
+
+
 
 
 
         public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
         {
-            List<BaseEntity> trackedEntities = await OnBeforeSaving();
+            List<SuapEntityWithState> trackedEntities = await OnBeforeSaving2();
 
 
             var currentTransaction = Database.CurrentTransaction;
@@ -88,18 +99,22 @@ namespace ConfigureServices
         }
 
 
-        async Task ProcessOfType<T>(List<BaseEntity> trackedEntities) where T : BaseEntity
+        async Task ProcessOfType<T>(List<SuapEntityWithState> trackedEntities) where T : BaseEntity, new()
         {
-            var eventProcessor = _sp.GetRequiredService<IEventProcessor<T>>();
+            IEventProcessor<T> eventProcessor = _sp.GetRequiredService<IEventProcessor<T>>();            
 
-            foreach (var entity in trackedEntities.OfType<T>())
-            {
-                await eventProcessor.Process(entity);
+            foreach (SuapEntityWithState entityWithState in trackedEntities. Where(p=>p.Entity is T)) //
+            {               
+                {
+                    entityWithState.Entity.State = entityWithState.State;
+
+                    await eventProcessor.Process(entityWithState.Entity as T);
+                }
             }
         }
 
 
-        private async Task OnAfterSaving(List<BaseEntity> trackedEntities)
+        private async Task OnAfterSaving(List<SuapEntityWithState> trackedEntities)
         {
 
             await ProcessOfType<ComplexModel>(trackedEntities);
@@ -113,6 +128,19 @@ namespace ConfigureServices
             var entities = ChangeTracker.Entries<BaseEntity>()
                 .Where(p => p.State != EntityState.Unchanged)
                 .Select(p => p.Entity).ToList();
+            return Task.FromResult(entities);
+        }
+
+        private Task<List<SuapEntityWithState>> OnBeforeSaving2()
+        {
+            var entities = ChangeTracker.Entries<BaseEntity>()
+                .Where(p => p.State != EntityState.Unchanged)
+                .Select(p => new SuapEntityWithState
+                {
+                    Entity = p.Entity,
+                    State = (int)p.State
+                }
+                ).ToList();
             return Task.FromResult(entities);
         }
     }

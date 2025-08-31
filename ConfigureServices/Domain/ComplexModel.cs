@@ -11,7 +11,7 @@ namespace ConfigureServices.Models.ComplexModels
 
 
         [NotMapped]
-        int State { get; set; }
+        public int State { get; set; }
     }
 
     public class ComplexModel : BaseEntity

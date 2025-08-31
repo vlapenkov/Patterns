@@ -31,6 +31,29 @@ namespace ConfigureServices.Controllers
             return Ok(model.Id);
         }
 
+
+        [HttpPut("complexmodel")]
+        public async Task<IActionResult> Put([FromBody]  ComplexModelDto model)
+        {
+            var found =_dbContext.ComplexModels.FirstOrDefault(x => x.Id == model.Id);
+
+            found.Name = model.Name;
+            
+            await _dbContext.SaveChangesAsync();
+            return Ok(model.Id);
+        }
+
+        [HttpDelete("complexmodel")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var found = _dbContext.ComplexModels.FirstOrDefault(x => x.Id == id);
+
+            _dbContext.Remove(found);
+
+            await _dbContext.SaveChangesAsync();
+            return Ok();
+        }
+
         [HttpGet("complexmodel")]
         public IActionResult Get1()
         {

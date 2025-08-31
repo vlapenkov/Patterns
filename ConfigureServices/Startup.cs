@@ -112,6 +112,7 @@ namespace ConfigureServices
             {
                 conf.AddResolver<ComplexModelAdd>();
                 conf.AddResolver<ComplexModelUpdate>();
+                conf.AddResolver<ComplexModelDelete>();
             });
             //services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             //{
