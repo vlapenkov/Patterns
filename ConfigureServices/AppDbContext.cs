@@ -105,16 +105,18 @@ namespace ConfigureServices
         }
 
 
-        async Task ProcessOfType<T>(List<EntityWithState> trackedEntities) where T : BaseEntity, new()
+        async Task ProcessOfType<TEntity>(List<EntityWithState> trackedEntities) where TEntity : BaseEntity, new()
         {
-            IEventProcessor<T> eventProcessor = _sp.GetRequiredService<IEventProcessor<T>>();
+            IEventProcessor<TEntity> eventProcessor = _sp.GetService<IEventProcessor<TEntity>>();
 
-            foreach (EntityWithState entityWithState in trackedEntities.Where(p => p.Entity is T))
+            // если не зарегистрировано обработчика, то выход
+            if (eventProcessor == null) return;
+
+            foreach (EntityWithState entityWithState in trackedEntities.Where(p => p.Entity is TEntity))
             {
-                {
 
-                    await eventProcessor.Process(entityWithState.Entity as T, entityWithState.State);
-                }
+                await eventProcessor.Process((TEntity)entityWithState.Entity, entityWithState.State);
+
             }
         }
 
