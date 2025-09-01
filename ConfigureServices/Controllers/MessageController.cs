@@ -22,7 +22,7 @@ namespace ConfigureServices.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-           await _eventProcessor.Process(new SecondMessage { Id = 10, Name = "Test" });
+           await _eventProcessor.Process(new SecondMessage { Id = 10, Name = "Test" },0);
 
             return Ok();
         }

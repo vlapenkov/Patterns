@@ -13,7 +13,7 @@ namespace ConfigureServices.Mediator.Resolvers
 
         }
 
-        public bool CanResolve(SecondMessage entry)
+        public bool CanResolve(int state)
         {
             return true;
             // throw new NotImplementedException();

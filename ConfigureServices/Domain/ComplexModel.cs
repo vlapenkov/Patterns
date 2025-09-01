@@ -1,18 +1,12 @@
-﻿using ConfigureServices.Models.Fields;
+﻿using ConfigureServices.Domain;
+using ConfigureServices.Models.Fields;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ConfigureServices.Models.ComplexModels
 {
 
-    public class BaseEntity
-    {
-        public long Id { get; set; }
-
-
-        [NotMapped]
-        public int State { get; set; }
-    }
+   
 
     public class ComplexModel : BaseEntity
     {
@@ -31,4 +25,7 @@ namespace ConfigureServices.Models.ComplexModels
 
         public long AttributeId { get; set; }
     }
+
+
+    
 }

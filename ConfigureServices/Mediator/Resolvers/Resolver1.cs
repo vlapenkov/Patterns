@@ -8,13 +8,9 @@ namespace ConfigureServices.Mediator.Resolvers
     {
 
 
-        public Resolver1()
+        public bool CanResolve(int state)
         {
 
-        }
-
-        public bool CanResolve(SecondMessage entry)
-        {
             return true;
             // throw new NotImplementedException();
         }
@@ -26,5 +22,7 @@ namespace ConfigureServices.Mediator.Resolvers
             return Task.CompletedTask;
             // throw new NotImplementedException();
         }
+
+
     }
 }

@@ -1,5 +1,7 @@
-﻿using ConfigureServices.Mediator;
+﻿using ConfigureServices.Domain;
+using ConfigureServices.Mediator;
 using ConfigureServices.Mediator.ComplexModelNs;
+
 using ConfigureServices.Models.ComplexModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +16,16 @@ namespace ConfigureServices
 {
     public class AppDbContext : DbContext
     {
+        /// <summary>
+        /// Внутренний класс для временного сохранения State, т.к. после SaveChanges State Меняется на Unchanged
+        /// </summary>
+        internal class EntityWithState : BaseEntity
+        {
+
+            public BaseEntity Entity { get; init; }
+
+            public int State { get; init; }
+        }
 
         private readonly IServiceProvider _sp;
 
@@ -27,6 +39,8 @@ namespace ConfigureServices
 
         public DbSet<ComplexModel> ComplexModels { get; set; }
 
+        public DbSet<Product> Products { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=contract-manager;Trusted_Connection=True;MultipleActiveResultSets=true");
@@ -39,15 +53,7 @@ namespace ConfigureServices
         }
 
 
-        /// <summary>
-        /// Класс для временного сохранения State, т.к. после SaveChanges State Меняется на Unchanged
-        /// </summary>
-        class SuapEntityWithState : BaseEntity {
 
-            public BaseEntity Entity { get; set; }
-
-            public int State { get; set; }
-        }
 
 
 
@@ -55,7 +61,7 @@ namespace ConfigureServices
 
         public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
         {
-            List<SuapEntityWithState> trackedEntities = await OnBeforeSaving2();
+            List<EntityWithState> trackedEntities = await OnBeforeSaving();
 
 
             var currentTransaction = Database.CurrentTransaction;
@@ -99,43 +105,35 @@ namespace ConfigureServices
         }
 
 
-        async Task ProcessOfType<T>(List<SuapEntityWithState> trackedEntities) where T : BaseEntity, new()
+        async Task ProcessOfType<T>(List<EntityWithState> trackedEntities) where T : BaseEntity, new()
         {
-            IEventProcessor<T> eventProcessor = _sp.GetRequiredService<IEventProcessor<T>>();            
+            IEventProcessor<T> eventProcessor = _sp.GetRequiredService<IEventProcessor<T>>();
 
-            foreach (SuapEntityWithState entityWithState in trackedEntities. Where(p=>p.Entity is T)) //
-            {               
+            foreach (EntityWithState entityWithState in trackedEntities.Where(p => p.Entity is T))
+            {
                 {
-                    entityWithState.Entity.State = entityWithState.State;
 
-                    await eventProcessor.Process(entityWithState.Entity as T);
+                    await eventProcessor.Process(entityWithState.Entity as T, entityWithState.State);
                 }
             }
         }
 
 
-        private async Task OnAfterSaving(List<SuapEntityWithState> trackedEntities)
+        private async Task OnAfterSaving(List<EntityWithState> trackedEntities)
         {
 
             await ProcessOfType<ComplexModel>(trackedEntities);
+            await ProcessOfType<Product>(trackedEntities);
 
         }
 
 
 
-        private Task<List<BaseEntity>> OnBeforeSaving()
+        private Task<List<EntityWithState>> OnBeforeSaving()
         {
             var entities = ChangeTracker.Entries<BaseEntity>()
                 .Where(p => p.State != EntityState.Unchanged)
-                .Select(p => p.Entity).ToList();
-            return Task.FromResult(entities);
-        }
-
-        private Task<List<SuapEntityWithState>> OnBeforeSaving2()
-        {
-            var entities = ChangeTracker.Entries<BaseEntity>()
-                .Where(p => p.State != EntityState.Unchanged)
-                .Select(p => new SuapEntityWithState
+                .Select(p => new EntityWithState
                 {
                     Entity = p.Entity,
                     State = (int)p.State

@@ -6,18 +6,21 @@ namespace ConfigureServices.Mediator.ComplexModelNs
 {
     public class ComplexModelUpdate : IEventResolver<ComplexModel>
     {
+        public bool CanResolve(int state)
+        {
+            return state == 3;
+        }
+
         public Task Resolve(ComplexModel entity)
         {
-            if (entity.State == 3)
-            {
 
-                Console.WriteLine($"entity with id ${entity.Id} ${entity} updated");
+            Console.WriteLine($"entity with id ${entity.Id} ${entity} updated");
 
-            }
+
 
             return Task.CompletedTask;
         }
     }
 
-    
+
 }

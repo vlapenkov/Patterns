@@ -6,14 +6,18 @@ namespace ConfigureServices.Mediator.ComplexModelNs
 {
     public class ComplexModelDelete : IEventResolver<ComplexModel>
     {
+        public bool CanResolve(int state)
+        {
+            return state == 2;
+        }
+
         public Task Resolve(ComplexModel entity)
         {
-            if (entity.State == 2)
-            {
+            
 
                 Console.WriteLine($"entity ${entity} delete");
 
-            }
+            
 
             return Task.CompletedTask;
         }

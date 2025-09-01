@@ -1,3 +1,4 @@
+using ConfigureServices.Domain;
 using ConfigureServices.Mediator;
 using ConfigureServices.Mediator.ComplexModelNs;
 using ConfigureServices.Mediator.Resolvers;
@@ -108,12 +109,21 @@ namespace ConfigureServices
             });
 
 
+            
+
             services.AddEventProcessor<ComplexModel>(conf =>
             {
                 conf.AddResolver<ComplexModelAdd>();
                 conf.AddResolver<ComplexModelUpdate>();
                 conf.AddResolver<ComplexModelDelete>();
             });
+
+            services.AddEventProcessor<Product>(conf =>
+            {
+                conf.AddResolver<ProductAdd>();
+                conf.AddResolver<ProductDelete>();
+            });
+
             //services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             //{
             //    builder.WithOrigins("http://localhost:3000")
@@ -142,25 +152,17 @@ namespace ConfigureServices
 
             app.UseEndpoints(endpoints => { _ = endpoints.MapControllers(); _ = endpoints.MapHealthChecks("/hc", new HealthCheckOptions { Predicate = _ => true, ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse }); });
 
-          
+
             //  app.UseHealthChecksUI(config => config.UIPath = "/hc-ui");
 
-            //try
-            //{
-            //    using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            //    {
-            //        var context = serviceScope.ServiceProvider.GetService<AppDbContext>();
-            //        context.Database.Migrate();
-            //    }
+           
+                using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+                {
+                    var context = serviceScope.ServiceProvider.GetService<AppDbContext>();
+                    context.Database.Migrate();
+                }
 
-            //}
-            //catch (Exception e)
-            //{
-            //    Console.WriteLine($"MyWebApi migration not working");
-            //    Console.Write(e.Message);
-            //    Console.Write(e.InnerException);
-            //    Console.Write(e.StackTrace);
-            //}
+           
 
         }
     }
